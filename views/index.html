@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html ng-app="admin">
+  <head>    
+    <title>Twitter</title>
+    <script src="javascripts/angular.min.js"> </script>
+    <link rel="stylesheet" href="stylesheets/style.css">
+    <link rel="stylesheet" href="stylesheets/bootstrap.min.css">  
+    <link rel="stylesheet" href="stylesheets/header-login-signup.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="javascripts/jquery.min.js"></script>
+    <script src="javascripts/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+
+    <script>
+        angular.module('admin', [])
+          .controller('HomeCtrl',function ($http,$scope, $rootScope, $interval){ 
+          $scope.test = function(){
+              $('.timeline-centered').html('');
+              var hashKey = $scope.hash;
+              var base_url = 'http://localhost:3000/?key='+hashKey;
+              var socket = io.connect(base_url);
+              socket.on('stream', function(tweet){
+                  var newTweet = '<article class="timeline-entry">'+
+                        '<div class="timeline-entry-inner">'+
+                            '<div class="timeline-icon bg-success">'+
+                                '<i class="entypo-feather"></i>'+
+                            '</div>'+
+                            '<div class="timeline-label">'+
+                                '<h2><a href="javascript:void(0)">'+tweet.user_name+'</a>'+
+                                  '<span>'+tweet.created_at+'</span>'+
+                                '</h2>'+
+                                '<p>'+tweet.text+'</p>'+
+                            '</div>'+
+                        '</div>'+
+                    '</article>';
+                  $('.timeline-centered').prepend(newTweet);
+              });
+          }
+        });
+      </script>
+  </head>
+  <body style="background-color: #eaf0f2;">
+
+    <nav class="navbar navbar-findcond navbar-fixed-top">
+      <div class="container">
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-left">
+            <li class="active"><a href="#/"><span><i aria-hidden="true" class="fa fa-home fa-lg">&nbsp</i></span>Home</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div style="margin-top: 5%;" ng-controller="HomeCtrl">     
+         <div class="container">
+          <div class="row">
+          <div class="col-lg-3 col-sm-6">
+                <div class="card hovercard">
+                    <div class="cardheader">
+                        <div class="info">
+                            <form role="search" ng-submit="test()" class="navbar-form search-form">
+                                <input type="text" ng-model="hash" placeholder="Search Keyword" style="border-radius:21px;" class="form-control">
+                            </form> 
+                        </div>
+                    </div>
+              </div>
+            </div>
+            <div class="col-lg-6">                           
+                <div class="card hovercard" style="text-align: left !important;">
+                    <div class="timeline-centered">
+                        
+                    </div>
+                </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+  </body>
+</html>
